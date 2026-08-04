@@ -1,11 +1,142 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Outlet, Link, useLocation } from 'react-router';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, FileText, ChevronDown } from 'lucide-react';
+import { useLang } from '../contexts/LanguageContext';
+import cvPtUrl from '../../imports/Gabriela_RodriguesCurriculo.pdf?url';
+import cvEnUrl from '../../imports/Curr_culoENGABRIELA.pdf?url';
+
+function CvDropdown() {
+  const { tr, lang } = useLang();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
+  }, []);
+
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+          background: 'none',
+          border: '1.5px solid #E5E5E2',
+          borderRadius: 6,
+          padding: '7px 14px',
+          fontSize: 13,
+          fontWeight: 600,
+          cursor: 'pointer',
+          color: '#171717',
+          transition: 'border-color 0.2s, background 0.2s',
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+        }}
+        onMouseEnter={e => {
+          (e.currentTarget as HTMLButtonElement).style.borderColor = '#171717';
+          (e.currentTarget as HTMLButtonElement).style.background = '#f5f5f5';
+        }}
+        onMouseLeave={e => {
+          (e.currentTarget as HTMLButtonElement).style.borderColor = '#E5E5E2';
+          (e.currentTarget as HTMLButtonElement).style.background = 'none';
+        }}
+      >
+        <FileText size={14} />
+        {tr.cvLabel}
+        <ChevronDown size={12} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+      </button>
+
+      {open && (
+        <div style={{
+          position: 'absolute',
+          top: 'calc(100% + 8px)',
+          right: 0,
+          background: '#fff',
+          border: '1px solid #E5E5E2',
+          borderRadius: 10,
+          boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+          minWidth: 160,
+          zIndex: 200,
+          overflow: 'hidden',
+        }}>
+          {[
+            { label: `🇧🇷 ${tr.cvPt}`, href: cvPtUrl },
+            { label: `🇺🇸 ${tr.cvEn}`, href: cvEnUrl },
+          ].map(item => (
+            <a
+              key={item.label}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              style={{
+                display: 'block',
+                padding: '12px 16px',
+                fontSize: 13,
+                fontWeight: 500,
+                color: '#171717',
+                textDecoration: 'none',
+                transition: 'background 0.15s',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#F8F8F6')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function LangToggle() {
+  const { lang, setLang } = useLang();
+  return (
+    <div style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      background: '#F0F0EE',
+      borderRadius: 6,
+      padding: 2,
+      gap: 2,
+    }}>
+      {(['pt', 'en'] as const).map(l => (
+        <button
+          key={l}
+          onClick={() => setLang(l)}
+          style={{
+            background: lang === l ? '#171717' : 'transparent',
+            color: lang === l ? '#fff' : '#666',
+            border: 'none',
+            borderRadius: 4,
+            padding: '5px 10px',
+            fontSize: 12,
+            fontWeight: 700,
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            letterSpacing: '0.04em',
+          }}
+        >
+          {l.toUpperCase()}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export function Layout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { tr } = useLang();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -19,10 +150,10 @@ export function Layout() {
   }, [location.pathname]);
 
   const navLinks = [
-    { label: 'Trabalho', href: '/#trabalho' },
-    { label: 'Processo', href: '/#processo' },
-    { label: 'Sobre mim', href: '/#sobre' },
-    { label: 'Contato', href: '/#contato' },
+    { label: tr.navWork, href: '/#trabalho' },
+    { label: tr.navProcess, href: '/#processo' },
+    { label: tr.navAbout, href: '/#sobre' },
+    { label: tr.navContact, href: '/#contato' },
   ];
 
   const handleNavClick = (href: string) => {
@@ -61,7 +192,7 @@ export function Layout() {
             </Link>
 
             {/* Desktop Nav */}
-            <nav style={{ display: 'flex', alignItems: 'center', gap: 32 }} className="hidden-mobile">
+            <nav style={{ display: 'flex', alignItems: 'center', gap: 24 }} className="hidden-mobile">
               {navLinks.map(link => (
                 <button
                   key={link.label}
@@ -83,6 +214,10 @@ export function Layout() {
                   {link.label}
                 </button>
               ))}
+
+              <LangToggle />
+              <CvDropdown />
+
               <button
                 onClick={() => handleNavClick('/#contato')}
                 style={{
@@ -101,7 +236,7 @@ export function Layout() {
                 onMouseEnter={e => (e.currentTarget.style.background = '#6D5DF5')}
                 onMouseLeave={e => (e.currentTarget.style.background = '#171717')}
               >
-                Vamos conversar
+                {tr.navCta}
               </button>
             </nav>
 
@@ -141,6 +276,52 @@ export function Layout() {
                 {link.label}
               </button>
             ))}
+
+            {/* Mobile lang toggle + CV */}
+            <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 16, paddingTop: 8 }}>
+              <LangToggle />
+              <a
+                href={cvPtUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  color: '#171717',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  padding: '6px 12px',
+                  border: '1.5px solid #E5E5E2',
+                  borderRadius: 6,
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                }}
+              >
+                <FileText size={13} /> CV PT
+              </a>
+              <a
+                href={cvEnUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  color: '#171717',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  padding: '6px 12px',
+                  border: '1.5px solid #E5E5E2',
+                  borderRadius: 6,
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                }}
+              >
+                <FileText size={13} /> CV EN
+              </a>
+            </div>
+
             <button
               onClick={() => handleNavClick('/#contato')}
               style={{
@@ -158,7 +339,7 @@ export function Layout() {
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
               }}
             >
-              Vamos conversar
+              {tr.navCta}
             </button>
           </div>
         )}
@@ -175,18 +356,13 @@ export function Layout() {
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: 32, marginBottom: 40 }}>
             <div>
               <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Gabriela Rodrigues</div>
-              <div style={{ color: '#999', fontSize: 14 }}>Product Designer · Product Owner</div>
+              <div style={{ color: '#999', fontSize: 14 }}>{tr.footerRole}</div>
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24 }}>
-              {[
-                { label: 'Projetos', href: '/#trabalho' },
-                { label: 'Sobre mim', href: '/#sobre' },
-                { label: 'Processo', href: '/#processo' },
-                { label: 'Contato', href: '/#contato' },
-              ].map(link => (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'center' }}>
+              {tr.footerNavLabels.map((label, i) => (
                 <button
-                  key={link.label}
-                  onClick={() => handleNavClick(link.href)}
+                  key={label}
+                  onClick={() => handleNavClick(tr.footerNavHrefs[i])}
                   style={{
                     background: 'none',
                     border: 'none',
@@ -200,7 +376,7 @@ export function Layout() {
                   onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
                   onMouseLeave={e => (e.currentTarget.style.color = '#999')}
                 >
-                  {link.label}
+                  {label}
                 </button>
               ))}
               <a
@@ -212,6 +388,27 @@ export function Layout() {
                 onMouseLeave={e => (e.currentTarget.style.color = '#999')}
               >
                 LinkedIn
+              </a>
+              {/* CV links in footer */}
+              <a
+                href={cvPtUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#999', fontSize: 14, textDecoration: 'none', transition: 'color 0.2s', display: 'inline-flex', alignItems: 'center', gap: 5 }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                onMouseLeave={e => (e.currentTarget.style.color = '#999')}
+              >
+                <FileText size={13} /> CV PT
+              </a>
+              <a
+                href={cvEnUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#999', fontSize: 14, textDecoration: 'none', transition: 'color 0.2s', display: 'inline-flex', alignItems: 'center', gap: 5 }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                onMouseLeave={e => (e.currentTarget.style.color = '#999')}
+              >
+                <FileText size={13} /> CV EN
               </a>
             </div>
           </div>

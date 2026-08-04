@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Link } from 'react-router';
 import { ArrowRight, ArrowUpRight, Circle, CheckCircle2 } from 'lucide-react';
 import photoGabriela from '../../imports/_MG_7184__1_-1.jpg';
+import { useLang } from '../contexts/LanguageContext';
 
 const ACCENT = '#6D5DF5';
 const BG = '#F8F8F6';
@@ -48,75 +49,15 @@ function RevealDiv({ children, style, delay = 0, ...props }: any) {
   );
 }
 
-const cases = [
-  {
-    id: 'go-girl',
-    number: '01',
-    category: 'PRODUCT DESIGN · UX/UI · MOBILE',
-    title: 'Go Girl',
-    description: 'Uma experiência digital criada para ajudar mulheres que viajam sozinhas a se sentirem mais seguras, conectadas e confiantes durante suas jornadas.',
-    role: 'Product Designer',
-    areas: 'UX Research · UX/UI · Product Strategy · UI Design',
-    platform: 'Mobile',
-    bg: '#0D0D2B',
-    accent: '#E91E8C',
-    tag: '#E91E8C',
-  },
-  {
-    id: 'checkout-v3',
-    number: '02',
-    category: 'PRODUCT DESIGN · UX/UI · PAYMENTS',
-    title: 'Checkout V3',
-    description: 'Evolução da experiência de checkout para tornar pagamentos mais simples, flexíveis e consistentes.',
-    role: 'Product Designer + Product Owner',
-    areas: 'UX/UI · Product · Payments · Design System',
-    platform: 'Web',
-    bg: '#F0F4FF',
-    accent: '#3B5BDB',
-    tag: '#3B5BDB',
-  },
-  {
-    id: 'portal-assinante',
-    number: '03',
-    category: 'PRODUCT DESIGN · UX/UI · SAAS',
-    title: 'Portal do Assinante',
-    description: 'Uma nova experiência para que usuários possam gerenciar assinaturas, pagamentos, cartões e informações da conta de forma simples e intuitiva.',
-    role: 'Product Designer + Product Owner',
-    areas: 'UX/UI · Product · Design System · Responsive',
-    platform: 'Web + Mobile',
-    bg: '#F0FFF4',
-    accent: '#2D8A4E',
-    tag: '#2D8A4E',
-  },
-  {
-    id: 'backoffice',
-    number: '04',
-    category: 'PRODUCT · UX/UI · SAAS',
-    title: 'Evolução do Backoffice',
-    description: 'Atuação na evolução de uma plataforma complexa, conectando necessidades de negócio, experiência do usuário e viabilidade técnica.',
-    role: 'Product Owner + Product Designer',
-    areas: 'Discovery · Product · UX/UI · Design System',
-    platform: 'Web',
-    bg: '#FFF8F0',
-    accent: '#E07B39',
-    tag: '#E07B39',
-  },
-  {
-    id: 'design-system',
-    number: '05',
-    category: 'DESIGN SYSTEM · UX/UI',
-    title: 'Design System',
-    description: 'Criação e evolução de padrões e componentes para construir experiências consistentes e escaláveis.',
-    role: 'Product Designer',
-    areas: 'Design System · Component Library · Tokens · Documentation',
-    platform: 'Figma + Web',
-    bg: '#F5F0FF',
-    accent: ACCENT,
-    tag: ACCENT,
-  },
+const casesMeta = [
+  { id: 'go-girl',         number: '01', title: 'Go Girl',               platform: 'Mobile',      bg: '#0D0D2B', accent: '#E91E8C', tag: '#E91E8C' },
+  { id: 'checkout-v3',    number: '02', title: 'Checkout V3',           platform: 'Web',         bg: '#F0F4FF', accent: '#3B5BDB', tag: '#3B5BDB' },
+  { id: 'portal-assinante', number: '03', title: 'Portal do Assinante', platform: 'Web + Mobile', bg: '#F0FFF4', accent: '#2D8A4E', tag: '#2D8A4E' },
+  { id: 'backoffice',     number: '04', title: 'Evolução do Backoffice', platform: 'Web',         bg: '#FFF8F0', accent: '#E07B39', tag: '#E07B39' },
+  { id: 'design-system',  number: '05', title: 'Design System',         platform: 'Figma + Web', bg: '#F5F0FF', accent: ACCENT,    tag: ACCENT    },
 ];
 
-function CaseVisual({ c }: { c: typeof cases[0] }) {
+function CaseVisual({ c }: { c: typeof casesMeta[0] }) {
   if (c.id === 'go-girl') {
     return (
       <div style={{ background: c.bg, borderRadius: 16, padding: 32, minHeight: 220, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, overflow: 'hidden', position: 'relative' }}>
@@ -245,14 +186,9 @@ function CaseVisual({ c }: { c: typeof cases[0] }) {
 }
 
 export function Home() {
-  const processSteps = [
-    { num: '01', title: 'ENTENDER', items: ['Discovery', 'Contexto', 'Usuários', 'Problema'] },
-    { num: '02', title: 'DEFINIR', items: ['Requisitos', 'Escopo', 'Prioridades', 'Objetivos'] },
-    { num: '03', title: 'EXPLORAR', items: ['User Flows', 'Arquitetura', 'Wireframes'] },
-    { num: '04', title: 'PROJETAR', items: ['UX/UI', 'Protótipos', 'Design System'] },
-    { num: '05', title: 'CONSTRUIR', items: ['Desenvolvimento', 'QA', 'Stakeholders'] },
-    { num: '06', title: 'EVOLUIR', items: ['Feedback', 'Validação', 'Métricas', 'Iteração'] },
-  ];
+  const { tr } = useLang();
+
+  const cases = casesMeta.map((meta, i) => ({ ...meta, ...tr.cases[i] }));
 
   const skills = [
     'Design Reviews', 'UI/UX Research', 'Design Thinking', 'Usability',
@@ -268,7 +204,10 @@ export function Home() {
     { num: 2, title: 'Start the UX Design Process: Empathize, Define, and Ideate', done: true },
     { num: 3, title: 'Build Wireframes and Low-Fidelity Prototypes', done: true },
     { num: 4, title: 'Conduct UX Research and Test Early Concepts', done: true },
-    { num: 5, title: 'Create High-Fidelity Designs and Prototypes in Figma', done: false },
+    { num: 5, title: 'Create High-Fidelity Designs and Prototypes in Figma', done: true },
+    { num: 6, title: 'Build Dynamic User Interfaces (UI) for Websites', done: false },
+    { num: 7, title: 'Design a User Experience for Social Good & Prepare for Jobs', done: false },
+    { num: 8, title: 'Accelerate Your Job Search with AI', done: false },
   ];
 
   const tools = ['Figma', 'Miro', 'Power BI', 'Azure DevOps', 'Jira', 'Postman', 'Git', 'React Native', 'Next.js', 'MySQL'];
@@ -280,19 +219,19 @@ export function Home() {
         <div style={{ flex: 1 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 40, padding: '6px 14px', marginBottom: 32 }}>
             <Circle size={8} fill="#22c55e" color="#22c55e" />
-            <span style={{ fontSize: 12, color: SECONDARY, fontWeight: 500 }}>Disponível para novos desafios</span>
+            <span style={{ fontSize: 12, color: SECONDARY, fontWeight: 500 }}>{tr.available}</span>
           </div>
 
           <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: SECONDARY, marginBottom: 20, textTransform: 'uppercase' }}>
-            Product Designer · Product Owner
+            {tr.heroRole}
           </div>
 
           <h1 style={{ fontSize: 'clamp(36px, 6vw, 76px)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-0.03em', color: TEXT, marginBottom: 28, maxWidth: 720 }}>
-            Transformo problemas complexos em experiências digitais simples.
+            {tr.heroHeading}
           </h1>
 
           <p style={{ fontSize: 18, color: SECONDARY, lineHeight: 1.7, maxWidth: 560, marginBottom: 40 }}>
-            Atuo na interseção entre produto, design e tecnologia, participando desde o entendimento do problema até a definição, prototipação e entrega de soluções digitais.
+            {tr.heroDesc}
           </p>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
@@ -303,7 +242,7 @@ export function Home() {
               onMouseEnter={e => (e.currentTarget.style.background = ACCENT)}
               onMouseLeave={e => (e.currentTarget.style.background = TEXT)}
             >
-              Ver projetos <ArrowRight size={16} />
+              {tr.heroCtaWork} <ArrowRight size={16} />
             </a>
             <a
               href="#sobre"
@@ -312,7 +251,7 @@ export function Home() {
               onMouseEnter={e => (e.currentTarget.style.borderColor = TEXT)}
               onMouseLeave={e => (e.currentTarget.style.borderColor = BORDER)}
             >
-              Sobre mim
+              {tr.heroCtaAbout}
             </a>
           </div>
         </div>
@@ -320,34 +259,34 @@ export function Home() {
         {/* Hero visual */}
         <div style={{ flex: '0 0 340px', display: 'flex', flexDirection: 'column', gap: 12 }} className="hide-on-mobile">
           <div style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 16, padding: 20 }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: ACCENT, letterSpacing: '0.1em', marginBottom: 12 }}>PRODUTO</div>
+            <div style={{ fontSize: 10, fontWeight: 700, color: ACCENT, letterSpacing: '0.1em', marginBottom: 12 }}>{tr.heroProduto}</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              {['Discovery', 'Backlog', 'Requisitos', 'Priorização'].map(tag => (
+              {tr.heroProdutoItems.map(tag => (
                 <span key={tag} style={{ background: '#F5F0FF', color: ACCENT, fontSize: 11, fontWeight: 600, borderRadius: 20, padding: '3px 10px' }}>{tag}</span>
               ))}
             </div>
           </div>
           <div style={{ display: 'flex', gap: 12 }}>
             <div style={{ flex: 1, background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 16, padding: 20 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: '#2D8A4E', letterSpacing: '0.1em', marginBottom: 12 }}>DESIGN</div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: '#2D8A4E', letterSpacing: '0.1em', marginBottom: 12 }}>{tr.heroDesign}</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {['UX Research', 'UI Design', 'Protótipos'].map(t => (
+                {tr.heroDesignItems.map(t => (
                   <span key={t} style={{ fontSize: 11, color: SECONDARY }}>{t}</span>
                 ))}
               </div>
             </div>
             <div style={{ flex: 1, background: TEXT, borderRadius: 16, padding: 20 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: '#999', letterSpacing: '0.1em', marginBottom: 12 }}>TECH</div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: '#999', letterSpacing: '0.1em', marginBottom: 12 }}>{tr.heroTech}</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {['Figma', 'React', 'Agile'].map(t => (
+                {tr.heroTechItems.map(t => (
                   <span key={t} style={{ fontSize: 11, color: '#ccc' }}>{t}</span>
                 ))}
               </div>
             </div>
           </div>
           <div style={{ background: ACCENT, borderRadius: 16, padding: 20, color: '#fff' }}>
-            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 6 }}>3 anos de experiência</div>
-            <div style={{ fontSize: 12, opacity: 0.85 }}>SaaS · Pagamentos · Checkout · Backoffice</div>
+            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 6 }}>{tr.heroExp}</div>
+            <div style={{ fontSize: 12, opacity: 0.85 }}>{tr.heroExpSub}</div>
           </div>
         </div>
       </section>
@@ -356,20 +295,20 @@ export function Home() {
       <section style={{ padding: '100px 24px', borderTop: `1px solid ${BORDER}` }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <RevealDiv style={{ maxWidth: 720, marginBottom: 64 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, letterSpacing: '0.12em', marginBottom: 16, textTransform: 'uppercase' }}>Sobre o trabalho</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, letterSpacing: '0.12em', marginBottom: 16, textTransform: 'uppercase' }}>{tr.introLabel}</div>
             <h2 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em', color: TEXT, marginBottom: 24 }}>
-              Design, produto e tecnologia no mesmo processo.
+              {tr.introHeading}
             </h2>
             <p style={{ fontSize: 17, color: SECONDARY, lineHeight: 1.7 }}>
-              Como Product Designer e Product Owner, participo de diferentes etapas do desenvolvimento de produtos: discovery, levantamento de necessidades, definição de requisitos, priorização, UX/UI, prototipação, Design Systems e acompanhamento da implementação.
+              {tr.introDesc}
             </p>
           </RevealDiv>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
             {[
-              { label: 'PRODUTO', desc: 'Discovery, requisitos, backlog, priorização e estratégia.', color: ACCENT },
-              { label: 'DESIGN', desc: 'UX, UI, prototipação, Design Systems e usabilidade.', color: '#2D8A4E' },
-              { label: 'DELIVERY', desc: 'Parceria com desenvolvimento, QA e stakeholders.', color: '#E07B39' },
+              { ...tr.introCols[0], color: ACCENT },
+              { ...tr.introCols[1], color: '#2D8A4E' },
+              { ...tr.introCols[2], color: '#E07B39' },
             ].map((item, i) => (
               <RevealDiv key={item.label} delay={i * 100} style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 16, padding: 32 }}>
                 <div style={{ fontSize: 11, fontWeight: 800, color: item.color, letterSpacing: '0.12em', marginBottom: 12 }}>{item.label}</div>
@@ -384,12 +323,12 @@ export function Home() {
       <section id="trabalho" style={{ padding: '100px 24px', backgroundColor: '#fff', borderTop: `1px solid ${BORDER}` }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <RevealDiv style={{ marginBottom: 64 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, letterSpacing: '0.12em', marginBottom: 16, textTransform: 'uppercase' }}>Portfólio</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, letterSpacing: '0.12em', marginBottom: 16, textTransform: 'uppercase' }}>{tr.portfolioLabel}</div>
             <h2 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em', color: TEXT, marginBottom: 16 }}>
-              Projetos selecionados
+              {tr.portfolioHeading}
             </h2>
             <p style={{ fontSize: 17, color: SECONDARY, lineHeight: 1.7, maxWidth: 520 }}>
-              Projetos que representam diferentes desafios, contextos e formas de atuação em produto e design.
+              {tr.portfolioDesc}
             </p>
           </RevealDiv>
 
@@ -424,11 +363,11 @@ export function Home() {
                           <p style={{ fontSize: 15, color: SECONDARY, lineHeight: 1.6, maxWidth: 500, marginBottom: 20 }}>{c.description}</p>
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
                             <div>
-                              <div style={{ fontSize: 10, fontWeight: 700, color: '#aaa', letterSpacing: '0.08em', marginBottom: 2 }}>MEU PAPEL</div>
+                              <div style={{ fontSize: 10, fontWeight: 700, color: '#aaa', letterSpacing: '0.08em', marginBottom: 2 }}>{tr.myRole}</div>
                               <div style={{ fontSize: 13, color: TEXT, fontWeight: 600 }}>{c.role}</div>
                             </div>
                             <div>
-                              <div style={{ fontSize: 10, fontWeight: 700, color: '#aaa', letterSpacing: '0.08em', marginBottom: 2 }}>PLATAFORMA</div>
+                              <div style={{ fontSize: 10, fontWeight: 700, color: '#aaa', letterSpacing: '0.08em', marginBottom: 2 }}>{tr.platform}</div>
                               <div style={{ fontSize: 13, color: TEXT, fontWeight: 600 }}>{c.platform}</div>
                             </div>
                           </div>
@@ -439,7 +378,7 @@ export function Home() {
                           <CaseVisual c={c} />
                         </div>
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: c.tag, fontSize: 13, fontWeight: 700 }}>
-                          Ver case <ArrowUpRight size={14} />
+                          {tr.viewCase} <ArrowUpRight size={14} />
                         </div>
                       </div>
                     </div>
@@ -455,15 +394,15 @@ export function Home() {
       <section id="processo" style={{ padding: '100px 24px', borderTop: `1px solid ${BORDER}` }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <RevealDiv style={{ marginBottom: 64 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, letterSpacing: '0.12em', marginBottom: 16, textTransform: 'uppercase' }}>Metodologia</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, letterSpacing: '0.12em', marginBottom: 16, textTransform: 'uppercase' }}>{tr.processLabel}</div>
             <h2 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em', color: TEXT, marginBottom: 16 }}>
-              Do problema à entrega.
+              {tr.processHeading}
             </h2>
-            <p style={{ fontSize: 17, color: SECONDARY }}>Meu processo conecta estratégia, experiência e execução.</p>
+            <p style={{ fontSize: 17, color: SECONDARY }}>{tr.processDesc}</p>
           </RevealDiv>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 16 }}>
-            {processSteps.map((step, i) => (
+            {tr.processSteps.map((step, i) => (
               <RevealDiv key={step.num} delay={i * 80} style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 16, padding: 24 }}>
                 <div style={{ fontSize: 28, fontWeight: 900, color: '#f0f0ef', letterSpacing: '-0.02em', marginBottom: 8, lineHeight: 1 }}>{step.num}</div>
                 <div style={{ fontSize: 11, fontWeight: 800, color: ACCENT, letterSpacing: '0.1em', marginBottom: 12 }}>{step.title}</div>
@@ -482,21 +421,17 @@ export function Home() {
       <section style={{ padding: '100px 24px', backgroundColor: TEXT, borderTop: `1px solid ${BORDER}` }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <RevealDiv style={{ marginBottom: 64 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, letterSpacing: '0.12em', marginBottom: 16, textTransform: 'uppercase' }}>Diferencial</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, letterSpacing: '0.12em', marginBottom: 16, textTransform: 'uppercase' }}>{tr.hybridLabel}</div>
             <h2 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em', color: '#fff', marginBottom: 20, maxWidth: 640 }}>
-              Meu diferencial está em conectar produto e design.
+              {tr.hybridHeading}
             </h2>
             <p style={{ fontSize: 17, color: '#888', lineHeight: 1.7, maxWidth: 600 }}>
-              Minha atuação como Product Designer e Product Owner permite que eu participe tanto da definição da experiência quanto das decisões que tornam uma solução viável para o produto e para o negócio.
+              {tr.hybridDesc}
             </p>
           </RevealDiv>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
-            {[
-              { label: 'PRODUTO', desc: 'Discovery, backlog, requisitos, priorização, user stories, critérios de aceite e planejamento.', color: ACCENT },
-              { label: 'DESIGN', desc: 'UX Research, fluxos, wireframes, protótipos, UI e Design Systems.', color: '#A78BFA' },
-              { label: 'COLABORAÇÃO', desc: 'Trabalho próximo de desenvolvimento, QA, stakeholders e outras áreas.', color: '#34D399' },
-            ].map((col, i) => (
+            {tr.hybridCols.map((col, i) => (
               <RevealDiv key={col.label} delay={i * 100} style={{ background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: 16, padding: 32 }}>
                 <div style={{ fontSize: 11, fontWeight: 800, color: col.color, letterSpacing: '0.12em', marginBottom: 16 }}>{col.label}</div>
                 <p style={{ color: '#888', fontSize: 15, lineHeight: 1.6 }}>{col.desc}</p>
@@ -511,23 +446,18 @@ export function Home() {
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 64, alignItems: 'center' }}>
             <RevealDiv>
-              <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, letterSpacing: '0.12em', marginBottom: 16, textTransform: 'uppercase' }}>Sobre mim</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, letterSpacing: '0.12em', marginBottom: 16, textTransform: 'uppercase' }}>{tr.aboutLabel}</div>
               <h2 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em', color: TEXT, marginBottom: 28 }}>
-                Prazer, Gabriela.
+                {tr.aboutHeading}
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {[
-                  'Sou Product Designer e Product Owner, atuando na interseção entre experiência do usuário, produto e tecnologia.',
-                  'Minha experiência envolve produtos digitais, plataformas SaaS, pagamentos, checkout, backoffice e experiências de gerenciamento de assinaturas.',
-                  'Participo de todo o ciclo do produto, desde discovery e definição de requisitos até prototipação, desenvolvimento, validação e evolução.',
-                  'Tenho interesse em problemas complexos, produtos digitais e experiências que consigam ser simples para quem usa e eficientes para quem constrói.',
-                ].map((text, i) => (
+                {tr.aboutParagraphs.map((text, i) => (
                   <p key={i} style={{ color: SECONDARY, fontSize: 16, lineHeight: 1.7 }}>{text}</p>
                 ))}
               </div>
 
               <div style={{ marginTop: 40 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: '#aaa', letterSpacing: '0.1em', marginBottom: 16 }}>FERRAMENTAS</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: '#aaa', letterSpacing: '0.1em', marginBottom: 16 }}>{tr.toolsLabel}</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {tools.map(tool => (
                     <span key={tool} style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 20, padding: '5px 12px', fontSize: 12, fontWeight: 600, color: SECONDARY }}>
@@ -550,7 +480,7 @@ export function Home() {
 
               {/* Skills */}
               <div style={{ marginTop: 28 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: '#aaa', letterSpacing: '0.1em', marginBottom: 16 }}>COMPETÊNCIAS</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: '#aaa', letterSpacing: '0.1em', marginBottom: 16 }}>{tr.skillsLabel}</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
                   {skills.map(skill => (
                     <span key={skill} style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 20, padding: '5px 12px', fontSize: 11, fontWeight: 500, color: TEXT }}>
@@ -572,8 +502,8 @@ export function Home() {
                     </svg>
                   </div>
                   <div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: '#aaa', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Certificação Google</div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: TEXT }}>Google UX Design</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: '#aaa', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{tr.certLabel}</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: TEXT }}>{tr.certTitle}</div>
                   </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -587,7 +517,7 @@ export function Home() {
                       <div style={{ flex: 1 }}>
                         <div style={{ fontSize: 12, fontWeight: 600, color: TEXT, lineHeight: 1.4 }}>{course.title}</div>
                         <div style={{ fontSize: 10.5, color: SECONDARY, marginTop: 2 }}>
-                          Curso {course.num} de 8 · {course.done ? 'Concluído' : 'Em andamento'}
+                          {tr.certTitle} {course.num} {tr.courseOf} 8 · {course.done ? tr.courseDone : tr.courseProgress}
                         </div>
                       </div>
                     </div>
@@ -603,12 +533,12 @@ export function Home() {
       <section id="contato" style={{ padding: '120px 24px', backgroundColor: BG, borderTop: `1px solid ${BORDER}` }}>
         <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
           <RevealDiv>
-            <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, letterSpacing: '0.12em', marginBottom: 24, textTransform: 'uppercase' }}>Contato</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, letterSpacing: '0.12em', marginBottom: 24, textTransform: 'uppercase' }}>{tr.contactLabel}</div>
             <h2 style={{ fontSize: 'clamp(32px, 5vw, 60px)', fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.03em', color: TEXT, marginBottom: 24 }}>
-              Vamos construir algo juntos?
+              {tr.contactHeading}
             </h2>
             <p style={{ fontSize: 18, color: SECONDARY, lineHeight: 1.7, marginBottom: 48, maxWidth: 520, margin: '0 auto 48px' }}>
-              Se você está procurando alguém que consiga conectar design, produto e tecnologia, vamos conversar.
+              {tr.contactDesc}
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'center', marginBottom: 32 }}>
               <a
@@ -617,7 +547,7 @@ export function Home() {
                 onMouseEnter={e => (e.currentTarget.style.background = ACCENT)}
                 onMouseLeave={e => (e.currentTarget.style.background = TEXT)}
               >
-                Entrar em contato <ArrowRight size={18} />
+                {tr.contactCta} <ArrowRight size={18} />
               </a>
               <a
                 href="https://www.linkedin.com/in/gabriela-rodrigues-802a2a198/"

@@ -2,6 +2,11 @@ import { Link } from 'react-router';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import LoginComponent from '../../imports/Login';
 import HomeComponent from '../../imports/Home';
+import ProfileComponent from '../../imports/Profile';
+import EditProfileComponent from '../../imports/EditProfile';
+import MinhasFotosComponent from '../../imports/MinhasFotos';
+import NovaPublicacaoComponent from '../../imports/TelaDeEmpoderamentoFeminino';
+import DestinosEmAltaComponent from '../../imports/TelaDeEmpoderamentoFeminino-1';
 
 const NAVY = '#0D0D2B';
 const MAGENTA = '#E91E8C';
@@ -207,7 +212,7 @@ export function GoGirl() {
             O design prioriza clareza, velocidade e confiança — pensando no contexto de uso em situações de viagem onde cada segundo importa.
           </p>
 
-          <div style={{ background: NAVY, borderRadius: 24, padding: '48px 32px', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: 40, flexWrap: 'wrap', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ background: NAVY, borderRadius: 24, padding: '48px 32px', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: 40, flexWrap: 'wrap', position: 'relative', overflow: 'hidden', marginBottom: 24 }}>
             <div style={{ position: 'absolute', top: -80, right: -80, width: 300, height: 300, borderRadius: '50%', background: `${MAGENTA}10` }} />
             <div style={{ position: 'absolute', bottom: -60, left: -60, width: 200, height: 200, borderRadius: '50%', background: `${LILAC}10` }} />
 
@@ -228,6 +233,34 @@ export function GoGirl() {
                 </div>
               </PhoneFrame>
             </div>
+          </div>
+
+          {/* Telas do Perfil & Social — 5 new Figma frames */}
+          <div style={{ fontSize: 12, fontWeight: 700, color: SECONDARY, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 20 }}>Perfil &amp; Social</div>
+          <div style={{
+            display: 'flex',
+            gap: 28,
+            overflowX: 'auto',
+            paddingBottom: 16,
+            scrollbarWidth: 'thin',
+            scrollbarColor: `${MAGENTA}44 transparent`,
+          }}>
+            {[
+              { label: 'Perfil', color: MAGENTA, component: <ProfileComponent />, nativeWidth: 440, nativeHeight: 1751 },
+              { label: 'Editar Perfil', color: '#A78BFA', component: <EditProfileComponent />, nativeWidth: 423, nativeHeight: 2036 },
+              { label: 'Minhas Fotos', color: PINK, component: <MinhasFotosComponent />, nativeWidth: 423, nativeHeight: 2500 },
+              { label: 'Nova Publicação', color: '#60A5FA', component: <NovaPublicacaoComponent />, nativeWidth: 423, nativeHeight: 1800 },
+              { label: 'Destinos em Alta', color: '#34D399', component: <DestinosEmAltaComponent />, nativeWidth: 423, nativeHeight: 3200 },
+            ].map(({ label, color, component, nativeWidth, nativeHeight }) => (
+              <div key={label} style={{ textAlign: 'center', flexShrink: 0 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color, letterSpacing: '0.12em', marginBottom: 16, textTransform: 'uppercase' }}>{label}</div>
+                <PhoneFrame width={210} height={455} nativeWidth={nativeWidth} nativeHeight={nativeHeight}>
+                  <div style={{ width: nativeWidth, height: nativeHeight }}>
+                    {component}
+                  </div>
+                </PhoneFrame>
+              </div>
+            ))}
           </div>
         </Section>
 
